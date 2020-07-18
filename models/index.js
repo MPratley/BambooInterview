@@ -7,7 +7,7 @@ const basename = path.basename(__filename)
 const db = {}
 
 // For now, just use a local sqlite database
-const dbFile = path.resolve(__dirname, '.data/sqlite.db')
+const dbFile = path.resolve(__dirname, '../.data/sqlite.db')
 const sequelize = new Sequelize.Sequelize({
   dialect: 'sqlite',
   storage: dbFile
