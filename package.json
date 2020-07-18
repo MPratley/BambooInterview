@@ -12,6 +12,8 @@
     "koa": "^2.13.0",
     "koa-mount": "^4.0.0",
     "koa-static": "^5.0.0",
+    "koa-hbs": "^1.0.0",
+    "koa-router": "^9.1.0",
     "sequelize": "^6.3.3",
     "sqlite3": "^5.0.0"
   },
