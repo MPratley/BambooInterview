@@ -1,23 +1,35 @@
-module.exports = function (sequelize, Sequelize) {
-  const User = sequelize.define('user', {
+'use strict'
+const { Model } = require('sequelize')
+module.exports = (sequelize, DataTypes) => {
+  class user extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate (models) {
+      // define association here
+    }
+  };
+  user.init({
     identifier: {
-      type: Sequelize.UUID,
+      type: DataTypes.UUID,
       allowNull: false,
-      defaultValue: Sequelize.UUIDV4,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true
     },
     fullName: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
       notEmpty: true
     },
     nickname: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: true,
       notEmpty: true
     },
     email: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
       notEmpty: true,
       validate: {
@@ -25,10 +37,12 @@ module.exports = function (sequelize, Sequelize) {
       }
     },
     balance: {
-      type: Sequelize.BIGINT,
+      type: DataTypes.BIGINT,
       allowNull: false
     }
+  }, {
+    sequelize,
+    modelName: 'user'
   })
-
-  return User
+  return user
 }
