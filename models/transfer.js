@@ -2,17 +2,16 @@
 const { Model } = require('sequelize')
 const User = require('./user')
 module.exports = (sequelize, DataTypes) => {
-  class transfer extends Model {
+  class Transfer extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate (models) {
-      // define association here
     }
   };
-  transfer.init({
+  Transfer.init({
     date: {
       type: DataTypes.DATE,
       allowNull: false
@@ -47,5 +46,5 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'transfer'
   })
-  return transfer
+  return Transfer
 }
