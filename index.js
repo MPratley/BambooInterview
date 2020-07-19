@@ -5,6 +5,8 @@ const Koa = require('koa')
 const mount = require('koa-mount')
 const serve = require('koa-static')
 const hbs = require('koa-hbs')
+const session = require('koa-session')
+const passport = require('koa-passport')
 
 const db = require('./models/index')
 
@@ -14,6 +16,15 @@ exports.app = app
 // statically serve assets
 app.use(mount('/', serve('./static')))
 
+// session and authentication
+app.use(session(app))
+app.use(passport.initialize())
+app.use(passport.session())
+// required for cookie signature generation.
+// In a production application you'd want a way of managing multiple cryptographically secure session keys.
+// For now this is fine though
+app.keys = ['TEMPKEY']
+
 // load the handlebars middlewear
 app.use(hbs.middleware({
   viewPath: path.resolve(__dirname, './views'),
@@ -21,6 +32,8 @@ app.use(hbs.middleware({
   defaultLayout: 'main'
 }))
 
+// Load passport strategies
+require('./passport')
 // Load routes
 require('./routes')
 
