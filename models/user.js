@@ -1,5 +1,13 @@
 'use strict'
+const bcrypt = require('bcrypt')
 const { Model } = require('sequelize')
+
+const hashNewPassword = async (user) => {
+  if (user.changed('password')) {
+    user.password = await bcrypt.hash(user.password, bcrypt.genSaltSync(10), null)
+  }
+}
+
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -8,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate (models) {
+    }
+
+    async comparePassword (plainPass) {
+      return await bcrypt.compare(plainPass, this.password)
     }
   };
   User.init({
@@ -38,10 +50,19 @@ module.exports = (sequelize, DataTypes) => {
     balance: {
       type: DataTypes.BIGINT,
       allowNull: false
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      notEmpty: true
     }
   }, {
     sequelize,
-    modelName: 'user'
+    modelName: 'user',
+    hooks: {
+      beforeCreate: hashNewPassword,
+      beforeUpdate: hashNewPassword
+    }
   })
   return User
 }
