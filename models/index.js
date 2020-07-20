@@ -1,10 +1,7 @@
 'use strict'
 
-const fs = require('fs')
 const path = require('path')
-const Sequelize = require('sequelize')
-const basename = path.basename(__filename)
-const db = {}
+const { Sequelize, Op } = require('sequelize')
 
 // For now, just use a local sqlite database
 const dbFile = path.resolve(__dirname, '../.data/sqlite.db')
@@ -13,22 +10,31 @@ const sequelize = new Sequelize.Sequelize({
   storage: dbFile
 })
 
-fs.readdirSync(__dirname)
-  .filter(file => {
-    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js')
-  })
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes)
-    db[model.name] = model
-  })
+// Pull in the models
+// This is automated by default, but that makes type checking a pain
+const db = {
+  user: require('./user')(sequelize, Sequelize.DataTypes),
+  transfer: require('./transfer')(sequelize, Sequelize.DataTypes)
+}
 
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db)
-  }
-})
+db.transfer.belongsTo(db.user, { as: 'sender' })
+db.transfer.belongsTo(db.user, { as: 'receiver' })
+db.user.belongsToMany(db.transfer, { through: 'usertransfers' })
 
 db.sequelize = sequelize
 db.Sequelize = Sequelize
+
+db.user.prototype.listUserTransfers = async (limit = 10) => {
+  return db.transfer.findAll({
+    order: [['createdAt', 'DESC']],
+    limit: limit,
+    where: {
+      [Op.or]: [
+        { user_send: this.identifier },
+        { user_receive: this.identifier }
+      ]
+    }
+  })
+}
 
 module.exports = db

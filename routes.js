@@ -11,19 +11,16 @@ const auth = require('./controllers/auth')
 router.get('/login', auth.login.get)
 router.post('/login', bodyParser(),
   passport.authenticate('local', {
-    successRedirect: '/app',
-    failureRedirect: '/'
+    successRedirect: '/',
+    failureRedirect: '/login#loginerror'
   }))
 router.get('/logout', auth.logout)
 
 // Application Routes
-router.get('/app', async (ctx) => {
+router.get('/', async (ctx) => {
   if (ctx.isAuthenticated()) ctx.body = 'Yay'
-  else ctx.body = 'nay'
+  else ctx.redirect('/login')
 })
-
-// For now, the index can just send people to login
-router.redirect('/', '/login')
 
 app.use(router.routes())
 app.use(router.allowedMethods())

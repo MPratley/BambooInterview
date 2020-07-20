@@ -1,8 +1,8 @@
 'use strict'
 const bcrypt = require('bcrypt')
-const { Model } = require('sequelize')
+const { Model, Op } = require('sequelize')
 
-const hashNewPassword = async (user) => {
+const beforeUpdateOrCreate = async (user) => {
   if (user.changed('password')) {
     user.password = await bcrypt.hash(user.password, bcrypt.genSaltSync(10), null)
   }
@@ -10,16 +10,13 @@ const hashNewPassword = async (user) => {
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate (models) {
+    async comparePassword (plainPass) {
+      return bcrypt.compare(plainPass, this.password)
     }
 
-    async comparePassword (plainPass) {
-      return await bcrypt.compare(plainPass, this.password)
+    displayName () {
+      if (this.nickname) return this.nickname
+      return this.fullName
     }
   };
   User.init({
@@ -45,7 +42,8 @@ module.exports = (sequelize, DataTypes) => {
       notEmpty: true,
       validate: {
         isEmail: true
-      }
+      },
+      unique: true
     },
     balance: {
       type: DataTypes.BIGINT,
@@ -60,8 +58,8 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'user',
     hooks: {
-      beforeCreate: hashNewPassword,
-      beforeUpdate: hashNewPassword
+      beforeCreate: beforeUpdateOrCreate,
+      beforeUpdate: beforeUpdateOrCreate
     }
   })
   return User

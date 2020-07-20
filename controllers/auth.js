@@ -2,10 +2,11 @@
 
 module.exports.login = {
   get: async (ctx) => {
-    // if (ctx.isAuthenticated()) {
-    //   user = ctx.session.passport.user
-    // }
+    if (ctx.isAuthenticated()) {
+      ctx.redirect('/')
+    }
     await ctx.render('login', {
+      // An example of passing parameters through to handlebars
       title: 'Bambank'
     })
   },

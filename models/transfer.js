@@ -1,19 +1,12 @@
 'use strict'
 const { Model } = require('sequelize')
-const User = require('./user')
 module.exports = (sequelize, DataTypes) => {
   class Transfer extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate (models) {
-    }
   };
   Transfer.init({
     date: {
       type: DataTypes.DATE,
+      defaultValue: new Date(),
       allowNull: false
     },
     balance: {
@@ -26,21 +19,9 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true
     },
-    user_send: {
-      type: DataTypes.UUID,
-      references: {
-        model: User,
-        key: 'identifier'
-      },
-      allowNull: false
-    },
-    user_receive: {
-      type: DataTypes.UUID,
-      references: {
-        model: User,
-        key: 'identifier'
-      },
-      allowNull: false
+    message: {
+      type: DataTypes.TEXT,
+      allowNull: true
     }
   }, {
     sequelize,

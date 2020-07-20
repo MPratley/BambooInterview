@@ -1,21 +1,13 @@
 const passport = require('koa-passport')
-
-// A temporary "user database" for experimenting with.
-const fetchUser = (() => {
-  // This is an example!
-  const user = { id: 1, username: 'test@example.com', password: 'test' }
-  return async function () {
-    return user
-  }
-})()
+const db = require('./index').db
 
 passport.serializeUser(function (user, done) {
-  done(null, user.id)
+  done(null, user.email)
 })
 
-passport.deserializeUser(async function (id, done) {
+passport.deserializeUser(async function (email, done) {
   try {
-    const user = await fetchUser()
+    const user = await db.user.findOne({ where: { email: email } })
     done(null, user)
   } catch (err) {
     done(err)
@@ -24,10 +16,16 @@ passport.deserializeUser(async function (id, done) {
 
 const LocalStrategy = require('passport-local').Strategy
 passport.use(new LocalStrategy(function (username, password, done) {
-  fetchUser()
+  db.user.findOne({ where: { email: username } })
     .then(user => {
-      if (username === user.username && password === user.password) {
-        done(null, user)
+      if (user) {
+        user.comparePassword(password).then(isPass => {
+          if (isPass) {
+            done(null, user)
+          } else {
+            done(null, false)
+          }
+        })
       } else {
         done(null, false)
       }
