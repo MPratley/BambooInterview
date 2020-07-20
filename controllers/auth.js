@@ -31,21 +31,18 @@ module.exports.signup = {
   },
   post: async (ctx) => {
     const request = ctx.request.body
-    db.user.findOrCreate({
+    await db.user.findOrCreate({
       where: { email: request.email },
       defaults: {
         email: request.email,
         fullName: request.name,
-        nickname: request.nickName,
+        nickname: request.nickname,
         password: request.password,
         balance: 0
       }
-    }).then((user, success) => {
-      if (success) ctx.redirect('/login#AccountCreated')
-      else ctx.redirect('/signup#Error')
-    }).catch((err) => {
-      console.log(err)
-      ctx.redirect('/signup#Error')
+    }).then((res) => {
+      if (res[0]) return ctx.redirect('/login#AccountCreated')
+      else return ctx.redirect('/signup#Error')
     })
   }
 }
