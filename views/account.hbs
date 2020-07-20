@@ -17,19 +17,21 @@
                     <h2 class="text-center display-4 my-3">
                         Transfer History
                     </h2>
+                    {{#each userTransactions}}
                     <div class="card">
                         <h5 class="card-header">
-                            Card title
+                            {{this.balance}}
                         </h5>
                         <div class="card-body">
                             <p class="card-text">
-                                Card content
+                                {{this.message}}
                             </p>
                         </div>
                         <div class="card-footer">
-                            Card footer
+                            {{this.date}}
                         </div>
                     </div>
+                    {{/each}}
                 </div>
                 <div class="col-md-9">
                     <div class="row">
