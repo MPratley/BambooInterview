@@ -28,21 +28,17 @@ db.user.addHook('afterCreate', (user) => {
 
 // Extra Hooks
 // Balance shouldn't actually be a direct property of users but a calculated and cached one. For now though, this is fine
-db.transfer.addHook('beforeCreate', (transfer) => {
+db.transfer.addHook('afterCreate', (transfer) => {
   db.user.findOne(
     { where: { identifier: transfer.receiverIdentifier } }
   ).then(user =>
-    user.update({
-      balance: user.balance + transfer.balance
-    })
+    user.addTransfer(transfer)
   )
   if (transfer.senderIdentifier) {
     db.user.findOne(
       { where: { identifier: transfer.senderIdentifier } }
     ).then(user =>
-      user.update({
-        balance: user.balance - transfer.balance
-      })
+      user.addTransfer(transfer)
     )
   }
 })

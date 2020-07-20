@@ -12,6 +12,7 @@ const db = require('./models/index')
 
 const app = new Koa()
 exports.app = app
+exports.db = db
 
 // statically serve assets
 app.use(mount('/', serve('./static')))

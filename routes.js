@@ -20,7 +20,8 @@ router.get('/logout', auth.logout)
 
 // Application Routes
 const account = require('./controllers/account')
-router.get('/', account.account)
+router.get('/', account.index)
+router.post('/', bodyParser(), account.newTransfer)
 
 app.use(router.routes())
 app.use(router.allowedMethods())

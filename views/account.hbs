@@ -18,8 +18,14 @@
                         Transfer History
                     </h2>
                     {{#each userTransactions}}
-                    <div class="card">
+                    <div class="card my-3">
                         <h5 class="card-header">
+                            {{#if (eq ../userId this.receiverIdentifier)}}
+                            Inbound:
+                            {{/if}}
+                            {{#if (neq ../userId this.receiverIdentifier)}}
+                            Outbound:
+                            {{/if}}
                             {{this.balance}}
                         </h5>
                         <div class="card-body">
@@ -29,6 +35,15 @@
                         </div>
                         <div class="card-footer">
                             {{this.date}}
+                            <br>
+                            {{#if (eq ../userId this.receiverIdentifier)}}
+                            {{#if this.senderIdentifier}}
+                                Sent by user: {{this.senderIdentifier}}
+                            {{/if}}
+                            {{/if}}
+                            {{#if (neq ../userId this.receiverIdentifier)}}
+                                Sent to user: {{this.receiverIdentifier}}
+                            {{/if}}
                         </div>
                     </div>
                     {{/each}}
@@ -50,7 +65,7 @@
                                     <h2 class="text-center display-4 my-3">
                                         Transfer Bambeuros
                                     </h2>
-                                    <form class="mx-5" method="post" action="/api/transaction">
+                                    <form class="mx-5" method="post">
                                         <div class="form-group">
                                             <label for="email">Recipient email address</label>
                                             <input type="email" class="form-control" name="email" required>

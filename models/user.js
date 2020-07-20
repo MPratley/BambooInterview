@@ -1,6 +1,7 @@
 'use strict'
 const bcrypt = require('bcrypt')
 const { Model } = require('sequelize')
+const transfer = require('./transfer')
 
 const beforeUpdateOrCreate = async (user) => {
   if (user.changed('password')) {
@@ -17,6 +18,20 @@ module.exports = (sequelize, DataTypes) => {
     displayName () {
       if (this.nickname) return this.nickname
       return this.fullName
+    }
+
+    async getBalance () {
+      const transfers = await this.getTransfers()
+      console.log(transfers)
+      var balance = 0
+      transfers.forEach(t => {
+        if (t.receiverIdentifier === this.identifier) {
+          balance = balance + t.balance
+        } else {
+          balance = balance - t.balance
+        }
+      })
+      return balance
     }
   };
   User.init({
@@ -44,10 +59,6 @@ module.exports = (sequelize, DataTypes) => {
         isEmail: true
       },
       unique: true
-    },
-    balance: {
-      type: DataTypes.BIGINT,
-      allowNull: false
     },
     password: {
       type: DataTypes.STRING,
