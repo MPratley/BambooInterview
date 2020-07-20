@@ -23,18 +23,6 @@ db.user.belongsToMany(db.transfer, { through: 'usertransfers' })
 
 db.sequelize = sequelize
 db.Sequelize = Sequelize
-
-db.user.prototype.listUserTransfers = async (limit = 10) => {
-  return db.transfer.findAll({
-    order: [['createdAt', 'DESC']],
-    limit: limit,
-    where: {
-      [Op.or]: [
-        { user_send: this.identifier },
-        { user_receive: this.identifier }
-      ]
-    }
-  })
-}
+db.Op = Op
 
 module.exports = db

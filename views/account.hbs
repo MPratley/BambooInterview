@@ -1,0 +1,74 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div
+                class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+                <p class="my-0 mr-md-auto font-weight-normal h5">Bambank</p>
+                <nav class="my-2 my-md-0 mr-md-3">
+                    <a class="btn" href="https://github.com/MPratley/BambooInterview"> Github </a>
+                    <a class="btn btn-outline-primary" href="/logout"> Logout </a>
+                </nav>
+            </div>
+            <h1 class="text-center display-1 my-5">
+                Hi, {{displayName}}!
+            </h1>
+            <div class="row">
+                <div class="col-md-3">
+                    <h2 class="text-center display-4 my-3">
+                        Transfer History
+                    </h2>
+                    <div class="card">
+                        <h5 class="card-header">
+                            Card title
+                        </h5>
+                        <div class="card-body">
+                            <p class="card-text">
+                                Card content
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            Card footer
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h2 class="text-center display-4 my-3">
+                                        Account Balance
+                                    </h2>
+                                    <p class="text-center my-auto">
+                                        <span class="display-1">{{userBalance}}</span>BB <br>
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h2 class="text-center display-4 my-3">
+                                        Transfer Bambeuros
+                                    </h2>
+                                    <form class="mx-5" method="post" action="/api/transaction">
+                                        <div class="form-group">
+                                            <label for="email">Recipient email address</label>
+                                            <input type="email" class="form-control" name="email" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="amount">Amount to Transfer</label>
+                                            <input type="number" class="form-control" name="amount" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="message">Message</label>
+                                            <input type="text" class="form-control" name="message">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

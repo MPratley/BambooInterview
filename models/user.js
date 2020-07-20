@@ -1,6 +1,6 @@
 'use strict'
 const bcrypt = require('bcrypt')
-const { Model, Op } = require('sequelize')
+const { Model } = require('sequelize')
 
 const beforeUpdateOrCreate = async (user) => {
   if (user.changed('password')) {

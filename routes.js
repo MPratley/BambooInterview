@@ -14,13 +14,12 @@ router.post('/login', bodyParser(),
     successRedirect: '/',
     failureRedirect: '/login#loginerror'
   }))
+router.get('/signup', auth.signup.get)
 router.get('/logout', auth.logout)
 
 // Application Routes
-router.get('/', async (ctx) => {
-  if (ctx.isAuthenticated()) ctx.body = 'Yay'
-  else ctx.redirect('/login')
-})
+const account = require('./controllers/account')
+router.get('/', account.account)
 
 app.use(router.routes())
 app.use(router.allowedMethods())
