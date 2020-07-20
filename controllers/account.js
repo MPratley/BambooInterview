@@ -27,13 +27,11 @@ module.exports.index = async (ctx) => {
   if (ctx.isUnauthenticated()) {
     ctx.redirect('/login')
   } else {
-    const balance = await ctx.state.user.getBalance()
-    console.log(balance)
     await ctx.render('account', {
       // An example of passing parameters through to *handlebars*
       displayName: ctx.state.user.displayName(),
       userId: ctx.state.user.identifier,
-      userBalance: balance,
+      userBalance: await ctx.state.user.getBalance(),
       userTransactions: await listUserTransfers(ctx.state.user.identifier)
     })
   }
@@ -52,11 +50,8 @@ module.exports.newTransfer = async (ctx) => {
         message: request.message,
         receiverIdentifier: recipient.identifier,
         senderIdentifier: ctx.state.user.identifier
-      }).then(res => {
-        if (res) return ctx.redirect('/#Success')
       })
-    } else {
-      return ctx.redirect('/#Error')
     }
   })
+  await ctx.redirect('/#')
 }

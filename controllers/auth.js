@@ -4,7 +4,7 @@ const db = require('./../index').db
 module.exports.login = {
   get: async (ctx) => {
     if (ctx.isAuthenticated()) {
-      await ctx.redirect('/')
+      await ctx.redirect('/#')
     } else {
       await ctx.render('login', {
         // An example of passing parameters through to handlebars
