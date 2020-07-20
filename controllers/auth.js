@@ -1,4 +1,5 @@
 'use strict'
+const db = require('./../index').db
 
 module.exports.login = {
   get: async (ctx) => {
@@ -29,6 +30,22 @@ module.exports.signup = {
     })
   },
   post: async (ctx) => {
-    await ctx.redirect('/')
+    const request = ctx.request.body
+    db.user.findOrCreate({
+      where: { email: request.email },
+      defaults: {
+        email: request.email,
+        fullName: request.name,
+        nickname: request.nickName,
+        password: request.password,
+        balance: 0
+      }
+    }).then((user, success) => {
+      if (success) ctx.redirect('/login#AccountCreated')
+      else ctx.redirect('/signup#Error')
+    }).catch((err) => {
+      console.log(err)
+      ctx.redirect('/signup#Error')
+    })
   }
 }

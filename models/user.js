@@ -52,7 +52,13 @@ module.exports = (sequelize, DataTypes) => {
     password: {
       type: DataTypes.STRING,
       allowNull: false,
-      notEmpty: true
+      notEmpty: true,
+      validate: {
+        len: {
+          args: [7, 120],
+          msg: 'The password length should be between 7 and 120 characters.'
+        }
+      }
     }
   }, {
     sequelize,

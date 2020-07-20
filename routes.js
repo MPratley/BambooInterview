@@ -15,6 +15,7 @@ router.post('/login', bodyParser(),
     failureRedirect: '/login#loginerror'
   }))
 router.get('/signup', auth.signup.get)
+router.post('/signup', bodyParser(), auth.signup.post)
 router.get('/logout', auth.logout)
 
 // Application Routes
