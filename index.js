@@ -48,7 +48,11 @@ db.sequelize.sync(
     db.user.findOrCreate({
       where: { email: 'jane@example.com' },
       defaults: { fullName: 'Jane', email: 'jane@example.com', password: 'password' }
-    })
+    }).then(res => { if (res[0]) console.log('created Jane 1') })
+    db.user.findOrCreate({
+      where: { email: 'jane2@example.com' },
+      defaults: { fullName: 'Jane', nickname: 'Jane II', email: 'jane@example.com', password: 'password' }
+    }).then(res => { if (res[0]) console.log('created Jane 2') })
     app.listen(3000, () => console.log('\n\nrunning on port 3000, http://localhost:3000'))
   })
 
