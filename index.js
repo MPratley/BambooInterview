@@ -43,9 +43,14 @@ db.sequelize.sync(
   (err) => {
     console.log('database sync error: ' + err)
     process.exit(1)
-  }).then(() => {
-  app.listen(3000, () => console.log('\n\nrunning on port 3000, http://localhost:3000'))
-})
+  })
+  .then(() => {
+    db.user.findOrCreate({
+      where: { email: 'jane@example.com' },
+      defaults: { fullName: 'Jane', email: 'jane@example.com', password: 'password' }
+    })
+    app.listen(3000, () => console.log('\n\nrunning on port 3000, http://localhost:3000'))
+  })
 
 process.on('SIGINT', function exit () {
   console.log('\nApplication Quitting\n')
